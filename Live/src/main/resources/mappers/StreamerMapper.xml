@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sdjyyds.live.mapper.StreamerMapper">
+    <resultMap id="BaseResultMap" type="com.sdjyyds.live.entity.Streamer">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="user_id" property="userId" jdbcType="BIGINT"/>
+        <result column="nickname" property="nickname" jdbcType="VARCHAR"/>
+        <result column="real_name" property="realName" jdbcType="VARCHAR"/>
+        <result column="id_card_number" property="idCardNumber" jdbcType="VARCHAR"/>
+        <result column="id_card_front_url" property="idCardFrontUrl" jdbcType="VARCHAR"/>
+        <result column="id_card_back_url" property="idCardBackUrl" jdbcType="VARCHAR"/>
+        <result column="avatar_url" property="avatarUrl" jdbcType="VARCHAR"/>
+        <result column="cover_url" property="coverUrl" jdbcType="VARCHAR"/>
+        <result column="short_intro" property="shortIntro" jdbcType="VARCHAR"/>
+        <result column="detailed_intro" property="detailedIntro" jdbcType="LONGVARCHAR"/>
+        <result column="contact_phone" property="contactPhone" jdbcType="VARCHAR"/>
+        <result column="email" property="email" jdbcType="VARCHAR"/>
+        <result column="bank_account" property="bankAccount" jdbcType="VARCHAR"/>
+        <result column="bank_name" property="bankName" jdbcType="VARCHAR"/>
+        <result column="account_holder" property="accountHolder" jdbcType="VARCHAR"/>
+        <result column="social_media" property="socialMedia" jdbcType="LONGVARCHAR"/>
+        <result column="follower_count" property="followerCount" jdbcType="INTEGER"/>
+        <result column="total_likes" property="totalLikes" jdbcType="INTEGER"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+        <result column="is_certified" property="isCertified" jdbcType="TINYINT"/>
+        <result column="certified_at" property="certifiedAt" jdbcType="TIMESTAMP"/>
+        <result column="reviewed_at" property="reviewedAt" jdbcType="TIMESTAMP"/>
+        <result column="reviewed_by" property="reviewedBy" jdbcType="BIGINT"/>
+        <result column="created_at" property="createdAt" jdbcType="TIMESTAMP"/>
+        <result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, user_id, nickname, real_name, id_card_number,
+        id_card_front_url, id_card_back_url, avatar_url, cover_url,
+        short_intro, detailed_intro, contact_phone, email, bank_account,
+        bank_name, account_holder, social_media, follower_count, total_likes,
+        status, is_certified, certified_at, reviewed_at, reviewed_by,
+        created_at, updated_at
+    </sql>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from streamers
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from streamers
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+
+    <insert id="insert" parameterType="com.sdjyyds.live.entity.Streamer">
+        insert into streamers (id, user_id, nickname,
+                               real_name, id_card_number, id_card_front_url,
+                               id_card_back_url, avatar_url, cover_url, short_intro,
+                               detailed_intro, contact_phone, email, bank_account,
+                               bank_name, account_holder, social_media, follower_count,
+                               total_likes, status, is_certified, certified_at,
+                               reviewed_at, reviewed_by, created_at, updated_at)
+        values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{nickname,jdbcType=VARCHAR},
+                #{realName,jdbcType=VARCHAR}, #{idCardNumber,jdbcType=VARCHAR}, #{idCardFrontUrl,jdbcType=VARCHAR},
+                #{idCardBackUrl,jdbcType=VARCHAR}, #{avatarUrl,jdbcType=VARCHAR}, #{coverUrl,jdbcType=VARCHAR},
+                #{shortIntro,jdbcType=VARCHAR}, #{detailedIntro,jdbcType=LONGVARCHAR}, #{contactPhone,jdbcType=VARCHAR},
+                #{email,jdbcType=VARCHAR}, #{bankAccount,jdbcType=VARCHAR}, #{bankName,jdbcType=VARCHAR},
+                #{accountHolder,jdbcType=VARCHAR}, #{socialMedia,jdbcType=LONGVARCHAR}, #{followerCount,jdbcType=INTEGER},
+                #{totalLikes,jdbcType=INTEGER}, #{status,jdbcType=VARCHAR}, #{isCertified,jdbcType=TINYINT},
+                #{certifiedAt,jdbcType=TIMESTAMP}, #{reviewedAt,jdbcType=TIMESTAMP}, #{reviewedBy,jdbcType=BIGINT},
+                #{createdAt,jdbcType=TIMESTAMP}, #{updatedAt,jdbcType=TIMESTAMP})
+    </insert>
+
+    <insert id="insertSelective" parameterType="com.sdjyyds.live.entity.Streamer">
+        insert into streamers
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            id,
+            <if test="userId != null">user_id,</if>
+            <if test="nickname != null">nickname,</if>
+            <if test="realName != null">real_name,</if>
+            <if test="idCardNumber != null">id_card_number,</if>
+            <if test="idCardFrontUrl != null">id_card_front_url,</if>
+            <if test="idCardBackUrl != null">id_card_back_url,</if>
+            <if test="avatarUrl != null">avatar_url,</if>
+            <if test="coverUrl != null">cover_url,</if>
+            <if test="shortIntro != null">short_intro,</if>
+            <if test="detailedIntro != null">detailed_intro,</if>
+            <if test="contactPhone != null">contact_phone,</if>
+            <if test="email != null">email,</if>
+            <if test="bankAccount != null">bank_account,</if>
+            <if test="bankName != null">bank_name,</if>
+            <if test="accountHolder != null">account_holder,</if>
+            <if test="socialMedia != null">social_media,</if>
+            <if test="followerCount != null">follower_count,</if>
+            <if test="totalLikes != null">total_likes,</if>
+            <if test="status != null">status,</if>
+            <if test="isCertified != null">is_certified,</if>
+            <if test="certifiedAt != null">certified_at,</if>
+            <if test="reviewedAt != null">reviewed_at,</if>
+            <if test="reviewedBy != null">reviewed_by,</if>
+            <if test="createdAt != null">created_at,</if>
+            <if test="updatedAt != null">updated_at,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            #{id,jdbcType=BIGINT},
+            <if test="userId != null">#{userId,jdbcType=BIGINT},</if>
+            <if test="nickname != null">#{nickname,jdbcType=VARCHAR},</if>
+            <if test="realName != null">#{realName,jdbcType=VARCHAR},</if>
+            <if test="idCardNumber != null">#{idCardNumber,jdbcType=VARCHAR},</if>
+            <if test="idCardFrontUrl != null">#{idCardFrontUrl,jdbcType=VARCHAR},</if>
+            <if test="idCardBackUrl != null">#{idCardBackUrl,jdbcType=VARCHAR},</if>
+            <if test="avatarUrl != null">#{avatarUrl,jdbcType=VARCHAR},</if>
+            <if test="coverUrl != null">#{coverUrl,jdbcType=VARCHAR},</if>
+            <if test="shortIntro != null">#{shortIntro,jdbcType=VARCHAR},</if>
+            <if test="detailedIntro != null">#{detailedIntro,jdbcType=LONGVARCHAR},</if>
+            <if test="contactPhone != null">#{contactPhone,jdbcType=VARCHAR},</if>
+            <if test="email != null">#{email,jdbcType=VARCHAR},</if>
+            <if test="bankAccount != null">#{bankAccount,jdbcType=VARCHAR},</if>
+            <if test="bankName != null">#{bankName,jdbcType=VARCHAR},</if>
+            <if test="accountHolder != null">#{accountHolder,jdbcType=VARCHAR},</if>
+            <if test="socialMedia != null">#{socialMedia,jdbcType=LONGVARCHAR},</if>
+            <if test="followerCount != null">#{followerCount,jdbcType=INTEGER},</if>
+            <if test="totalLikes != null">#{totalLikes,jdbcType=INTEGER},</if>
+            <if test="status != null">#{status,jdbcType=VARCHAR},</if>
+            <if test="isCertified != null">#{isCertified,jdbcType=TINYINT},</if>
+            <if test="certifiedAt != null">#{certifiedAt,jdbcType=TIMESTAMP},</if>
+            <if test="reviewedAt != null">#{reviewedAt,jdbcType=TIMESTAMP},</if>
+            <if test="reviewedBy != null">#{reviewedBy,jdbcType=BIGINT},</if>
+            <if test="createdAt != null">#{createdAt,jdbcType=TIMESTAMP},</if>
+            <if test="updatedAt != null">#{updatedAt,jdbcType=TIMESTAMP},</if>
+        </trim>
+    </insert>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from streamers
+    </select>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.sdjyyds.live.entity.Streamer">
+        update streamers
+        <set>
+            <if test="userId != null">user_id = #{userId,jdbcType=BIGINT},</if>
+            <if test="nickname != null">nickname = #{nickname,jdbcType=VARCHAR},</if>
+            <if test="realName != null">real_name = #{realName,jdbcType=VARCHAR},</if>
+            <if test="idCardNumber != null">id_card_number = #{idCardNumber,jdbcType=VARCHAR},</if>
+            <if test="idCardFrontUrl != null">id_card_front_url = #{idCardFrontUrl,jdbcType=VARCHAR},</if>
+            <if test="idCardBackUrl != null">id_card_back_url = #{idCardBackUrl,jdbcType=VARCHAR},</if>
+            <if test="avatarUrl != null">avatar_url = #{avatarUrl,jdbcType=VARCHAR},</if>
+            <if test="coverUrl != null">cover_url = #{coverUrl,jdbcType=VARCHAR},</if>
+            <if test="shortIntro != null">short_intro = #{shortIntro,jdbcType=VARCHAR},</if>
+            <if test="detailedIntro != null">detailed_intro = #{detailedIntro,jdbcType=LONGVARCHAR},</if>
+            <if test="contactPhone != null">contact_phone = #{contactPhone,jdbcType=VARCHAR},</if>
+            <if test="email != null">email = #{email,jdbcType=VARCHAR},</if>
+            <if test="bankAccount != null">bank_account = #{bankAccount,jdbcType=VARCHAR},</if>
+            <if test="bankName != null">bank_name = #{bankName,jdbcType=VARCHAR},</if>
+            <if test="accountHolder != null">account_holder = #{accountHolder,jdbcType=VARCHAR},</if>
+            <if test="socialMedia != null">social_media = #{socialMedia,jdbcType=LONGVARCHAR},</if>
+            <if test="followerCount != null">follower_count = #{followerCount,jdbcType=INTEGER},</if>
+            <if test="totalLikes != null">total_likes = #{totalLikes,jdbcType=INTEGER},</if>
+            <if test="status != null">status = #{status,jdbcType=VARCHAR},</if>
+            <if test="isCertified != null">is_certified = #{isCertified,jdbcType=TINYINT},</if>
+            <if test="certifiedAt != null">certified_at = #{certifiedAt,jdbcType=TIMESTAMP},</if>
+            <if test="reviewedAt != null">reviewed_at = #{reviewedAt,jdbcType=TIMESTAMP},</if>
+            <if test="reviewedBy != null">reviewed_by = #{reviewedBy,jdbcType=BIGINT},</if>
+            <if test="createdAt != null">created_at = #{createdAt,jdbcType=TIMESTAMP},</if>
+            <if test="updatedAt != null">updated_at = #{updatedAt,jdbcType=TIMESTAMP},</if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateByPrimaryKey" parameterType="com.sdjyyds.live.entity.Streamer">
+        update streamers
+        set user_id = #{userId,jdbcType=BIGINT},
+            nickname = #{nickname,jdbcType=VARCHAR},
+            real_name = #{realName,jdbcType=VARCHAR},
+            id_card_number = #{idCardNumber,jdbcType=VARCHAR},
+            id_card_front_url = #{idCardFrontUrl,jdbcType=VARCHAR},
+            id_card_back_url = #{idCardBackUrl,jdbcType=VARCHAR},
+            avatar_url = #{avatarUrl,jdbcType=VARCHAR},
+            cover_url = #{coverUrl,jdbcType=VARCHAR},
+            short_intro = #{shortIntro,jdbcType=VARCHAR},
+            detailed_intro = #{detailedIntro,jdbcType=LONGVARCHAR},
+            contact_phone = #{contactPhone,jdbcType=VARCHAR},
+            email = #{email,jdbcType=VARCHAR},
+            bank_account = #{bankAccount,jdbcType=VARCHAR},
+            bank_name = #{bankName,jdbcType=VARCHAR},
+            account_holder = #{accountHolder,jdbcType=VARCHAR},
+            social_media = #{socialMedia,jdbcType=LONGVARCHAR},
+            follower_count = #{followerCount,jdbcType=INTEGER},
+            total_likes = #{totalLikes,jdbcType=INTEGER},
+            status = #{status,jdbcType=VARCHAR},
+            is_certified = #{isCertified,jdbcType=TINYINT},
+            certified_at = #{certifiedAt,jdbcType=TIMESTAMP},
+            reviewed_at = #{reviewedAt,jdbcType=TIMESTAMP},
+            reviewed_by = #{reviewedBy,jdbcType=BIGINT},
+            created_at = #{createdAt,jdbcType=TIMESTAMP},
+            updated_at = #{updatedAt,jdbcType=TIMESTAMP}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+</mapper>

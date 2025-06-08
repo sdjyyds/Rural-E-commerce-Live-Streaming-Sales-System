@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sdjyyds.order.mapper.RefundMapper">
+    <insert id="insert">
+        INSERT INTO refunds (id, order_id, user_id, refund_no, reason, amount, status, applied_at, processed_at,
+                             processed_by, reject_reason, created_at, updated_at)
+        VALUES (#{id}, #{orderId}, #{userId}, #{refundNo}, #{reason}, #{amount}, #{status}, #{appliedAt},
+                #{processedAt}, #{processedBy}, #{rejectReason}, #{createdAt}, #{updatedAt})
+    </insert>
+</mapper>

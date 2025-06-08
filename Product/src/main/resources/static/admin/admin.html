@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>乡村优品 - 管理者界面</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* 引入 start.html 中的样式 */
+        :root {
+            --primary: #4caf50;
+            --primary-dark: #388e3c;
+            --secondary: #ff9800;
+            --dark: #333;
+            --light: #f8f8f8;
+            --gray: #e0e0e0;
+            --danger: #f44336;
+            --success: #4caf50;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        .admin-container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            padding: 30px;
+        }
+
+        .admin-container h2 {
+            margin-bottom: 20px;
+        }
+
+        .admin-tabs {
+            display: flex;
+            margin-bottom: 20px;
+        }
+
+        .admin-tabs a {
+            color: var(--dark);
+            text-decoration: none;
+            padding: 10px 20px;
+            transition: background-color 0.3s;
+        }
+
+        .admin-tabs a:hover, .admin-tabs a.active {
+            background-color: var(--gray);
+        }
+
+        .admin-content {
+            border-top: 1px solid var(--gray);
+            padding-top: 20px;
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .admin-table th, .admin-table td {
+            padding: 10px;
+            border: 1px solid var(--gray);
+            text-align: left;
+        }
+
+        .admin-table th {
+            background-color: var(--light);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="admin-container">
+            <h2>管理者界面</h2>
+            <div class="admin-tabs">
+                <a href="#" class="active">用户管理</a>
+                <a href="#">商户管理</a>
+                <a href="#">商品管理</a>
+                <a href="#">订单管理</a>
+            </div>
+            <div class="admin-content">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>用户ID</th>
+                            <th>用户名</th>
+                            <th>邮箱</th>
+                            <th>注册时间</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>张三</td>
+                            <td>zhangsan@example.com</td>
+                            <td>2023-10-01</td>
+                            <td>
+                                <button class="btn btn-primary">查看详情</button>
+                                <button class="btn btn-danger">删除</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>李四</td>
+                            <td>lisi@example.com</td>
+                            <td>2023-10-02</td>
+                            <td>
+                                <button class="btn btn-primary">查看详情</button>
+                                <button class="btn btn-danger">删除</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

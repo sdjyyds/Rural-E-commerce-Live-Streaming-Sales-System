@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>订单详情</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+<div class="container mt-5">
+    <div class="d-flex justify-content-between mb-3">
+        <h1>订单详情</h1>
+        <a href="order_list.html" class="btn btn-secondary">返回列表</a>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="d-flex justify-content-between">
+                <h5 class="card-title">订单信息</h5>
+                <div id="actionButtons">
+                    <!-- 按钮将通过 JavaScript 动态添加 -->
+                </div>
+            </div>
+            <div id="orderInfo" class="row">
+                <div class="col-md-6">
+                    <p><strong>订单 ID:</strong> <span id="orderId">-</span></p>
+                    <p><strong>订单编号:</strong> <span id="orderNo">-</span></p>
+                    <p><strong>用户 ID:</strong> <span id="userId">-</span></p>
+                    <p><strong>订单时间:</strong> <span id="orderTime">-</span></p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>状态:</strong> <span id="orderStatus">-</span></p>
+                    <p><strong>总价格:</strong> <span id="totalPrice">-</span></p>
+                    <p><strong>支付金额:</strong> <span id="paymentAmount">-</span></p>
+                    <p><strong>备注:</strong> <span id="remark">-</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h2 class="mb-3">订单项信息</h2>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>订单项 ID</th>
+            <th>商品 ID</th>
+            <th>商品名称</th>
+            <th>数量</th>
+            <th>单价</th>
+            <th>实际价格</th>
+        </tr>
+        </thead>
+        <tbody id="orderItems">
+        <!-- 数据将通过 JavaScript 动态填充 -->
+        <tr>
+            <td colspan="6" class="text-center">加载中...</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- 支付模态框 - 添加detail前缀 -->
+<div class="modal fade" id="detailPaymentModal" tabindex="-1" aria-labelledby="detailPaymentModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="detailPaymentModalLabel">订单支付</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="detailPaymentForm">
+                    <input type="hidden" id="detailPaymentOrderId" name="orderId">
+                    <div class="mb-3">
+                        <label class="form-label">支付金额</label>
+                        <div class="input-group">
+                            <span class="input-group-text">¥</span>
+                            <input type="text" id="detailPaymentAmount" name="amount" class="form-control" readonly>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">支付方式</label>
+                        <select class="form-control" id="detailPaymentMethod" name="method">
+                            <option value="WECHAT">微信支付</option>
+                            <option value="ALIPAY">支付宝</option>
+                            <option value="CARD">银行卡</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">备注</label>
+                        <textarea class="form-control" id="detailPaymentRemark" name="remark" rows="2"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" onclick="detailProcessPayment()">确认支付</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 退款模态框 - 添加detail前缀 -->
+<div class="modal fade" id="detailRefundModal" tabindex="-1" aria-labelledby="detailRefundModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="detailRefundModalLabel">退款申请</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="detailRefundForm">
+                    <input type="hidden" id="detailRefundOrderId" name="orderId">
+                    <div class="mb-3">
+                        <label class="form-label">退款金额</label>
+                        <div class="input-group">
+                            <span class="input-group-text">¥</span>
+                            <input type="text" id="detailRefundAmount" name="amount" class="form-control">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">退款原因</label>
+                        <select class="form-control" id="detailRefundReason" name="reason">
+                            <option value="QUALITY">商品质量问题</option>
+                            <option value="WRONG_ITEM">商品与描述不符</option>
+                            <option value="CANCEL">买家取消订单</option>
+                            <option value="OTHER">其他原因</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">详细说明</label>
+                        <textarea class="form-control" id="detailRefundDescription" name="description" rows="3"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" onclick="detailApplyRefund()">提交申请</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 发货模态框 - 添加detail前缀 -->
+<div class="modal fade" id="detailShipModal" tabindex="-1" aria-labelledby="detailShipModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="detailShipModalLabel">订单发货</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="detailShipForm">
+                    <input type="hidden" id="detailShipOrderId" name="orderId">
+                    <div class="mb-3">
+                        <label class="form-label">物流公司</label>
+                        <input type="text" id="detailShippingCompany" name="company" class="form-control" placeholder="请输入物流公司名称">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">物流单号</label>
+                        <input type="text" id="detailTrackingNumber" name="trackingNumber" class="form-control" placeholder="请输入物流单号">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" onclick="detailShipOrder()">确认发货</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const orderId = urlParams.get('id');
+
+        if (!orderId) {
+            alert('未指定订单 ID');
+            window.location.href = 'order_list.html';
+            return;
+        }
+
+        loadOrderDetails(orderId);
+    });
+
+    async function loadOrderDetails(orderId) {
+        try {
+            const response = await fetch(`/api/orders/${orderId}`);
+            if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+
+            const order = await response.json();
+            populateOrderDetails(order);
+
+            const itemsResponse = await fetch(`/api/orders/${orderId}/items`);
+            if (!itemsResponse.ok) throw new Error(`HTTP error! Status: ${itemsResponse.status}`);
+
+            const orderItems = await itemsResponse.json();
+            populateOrderItems(orderItems);
+        } catch (error) {
+            console.error('获取订单详情失败:', error);
+            document.getElementById('orderInfo').innerHTML = `
+                    <div class="col-12 text-center text-danger">
+                        加载订单详情失败，请重试
+                    </div>
+                `;
+            document.getElementById('orderItems').innerHTML = `
+                    <tr>
+                        <td colspan="6" class="text-center text-danger">
+                            加载订单项失败，请重试
+                        </td>
+                    </tr>
+                `;
+        }
+    }
+
+    function populateOrderDetails(order) {
+        document.getElementById('orderId').textContent = order.id;
+        document.getElementById('orderNo').textContent = order.orderNo;
+        document.getElementById('userId').textContent = order.userId;
+        document.getElementById('orderTime').textContent = order.orderTime;
+        document.getElementById('orderStatus').textContent = getStatusText(order.status);
+        document.getElementById('totalPrice').textContent = order.totalPrice.toFixed(2);
+        document.getElementById('paymentAmount').textContent = order.paymentAmount.toFixed(2);
+        document.getElementById('remark').textContent = order.remark || '-';
+
+        // 添加操作按钮
+        const actionButtons = document.getElementById('actionButtons');
+        let buttonsHtml = '';
+
+        if (order.status === 0) { // 待支付
+            buttonsHtml = `
+                    <button class="btn btn-success"
+                        onclick="openDetailPaymentModal(${order.id}, ${order.totalPrice})">
+                        支付
+                    </button>
+                `;
+        } else if (order.status === 1) { // 已支付
+            buttonsHtml = `
+                    <button class="btn btn-warning ms-2"
+                        onclick="openDetailRefundModal(${order.id}, ${order.totalPrice})">
+                        申请退款
+                    </button>
+                    <button class="btn btn-info ms-2"
+                        onclick="openDetailShipModal(${order.id})">
+                        发货
+                    </button>
+                `;
+        } else if (order.status === 2) { // 已发货
+            buttonsHtml = `
+                    <button class="btn btn-warning ms-2"
+                        onclick="openDetailRefundModal(${order.id}, ${order.totalPrice})">
+                        申请退款
+                    </button>
+                `;
+        }
+
+        actionButtons.innerHTML = buttonsHtml;
+    }
+
+    function populateOrderItems(items) {
+        const orderItems = document.getElementById('orderItems');
+
+        if (items.length === 0) {
+            orderItems.innerHTML = `<tr><td colspan="6" class="text-center">无订单项数据</td></tr>`;
+            return;
+        }
+
+        let html = '';
+        items.forEach(item => {
+            html += `
+                    <tr>
+                        <td>${item.id}</td>
+                        <td>${item.productId}</td>
+                        <td>${item.productName}</td>
+                        <td>${item.quantity}</td>
+                        <td>${item.unitPrice.toFixed(2)}</td>
+                        <td>${item.actualPrice.toFixed(2)}</td>
+                    </tr>
+                `;
+        });
+
+        orderItems.innerHTML = html;
+    }
+
+    function getStatusText(status) {
+        const statusMap = {
+            0: '待支付',
+            1: '已支付',
+            2: '已发货',
+            3: '已完成',
+            4: '已取消'
+        };
+        return statusMap[status] || '未知状态';
+    }
+
+    // 打开支付模态框 - 添加detail前缀
+    function openDetailPaymentModal(orderId, amount) {
+        document.getElementById('detailPaymentOrderId').value = orderId;
+        document.getElementById('detailPaymentAmount').value = amount.toFixed(2);
+        new bootstrap.Modal(document.getElementById('detailPaymentModal')).show();
+    }
+
+    // 处理支付请求 - 添加detail前缀
+    async function detailProcessPayment() {
+        const orderId = document.getElementById('detailPaymentOrderId').value;
+        const amount = document.getElementById('detailPaymentAmount').value;
+        const method = document.getElementById('detailPaymentMethod').value;
+        const remark = document.getElementById('detailPaymentRemark').value;
+
+        const paymentData = {
+            orderId: parseInt(orderId),
+            amount: parseFloat(amount),
+            paymentMethod: method,
+            remark: remark
+        };
+
+        try {
+            const response = await fetch('/api/orders/pay', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(paymentData)
+            });
+
+            if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+
+            const result = await response.text();
+            alert(result);
+            document.getElementById('detailPaymentModal').querySelector('.btn-close').click();
+            loadOrderDetails(orderId); // 刷新订单详情
+        } catch (error) {
+            console.error('支付失败:', error);
+            alert('支付失败，请重试');
+        }
+    }
+
+    // 打开退款模态框 - 添加detail前缀
+    function openDetailRefundModal(orderId, totalAmount) {
+        document.getElementById('detailRefundOrderId').value = orderId;
+        document.getElementById('detailRefundAmount').value = totalAmount.toFixed(2);
+        new bootstrap.Modal(document.getElementById('detailRefundModal')).show();
+    }
+
+    // 提交退款申请 - 添加detail前缀
+    async function detailApplyRefund() {
+        const orderId = document.getElementById('detailRefundOrderId').value;
+        const amount = document.getElementById('detailRefundAmount').value;
+        const reason = document.getElementById('detailRefundReason').value;
+        const description = document.getElementById('detailRefundDescription').value;
+
+        const refundData = {
+            orderId: parseInt(orderId),
+            amount: parseFloat(amount),
+            reason: reason,
+            description: description
+        };
+
+        try {
+            const response = await fetch('/api/orders/refund', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(refundData)
+            });
+
+            if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+
+            const result = await response.text();
+            alert(result);
+            document.getElementById('detailRefundModal').querySelector('.btn-close').click();
+            loadOrderDetails(orderId); // 刷新订单详情
+        } catch (error) {
+            console.error('退款申请失败:', error);
+            alert('退款申请失败，请重试');
+        }
+    }
+
+    // 打开发货模态框 - 添加detail前缀
+    function openDetailShipModal(orderId) {
+        document.getElementById('detailShipOrderId').value = orderId;
+        new bootstrap.Modal(document.getElementById('detailShipModal')).show();
+    }
+
+    // 处理发货请求 - 添加detail前缀
+    async function detailShipOrder() {
+        const orderId = document.getElementById('detailShipOrderId').value;
+        const company = document.getElementById('detailShippingCompany').value;
+        const trackingNumber = document.getElementById('detailTrackingNumber').value;
+
+        if (!company || !trackingNumber) {
+            alert('请填写物流公司和物流单号');
+            return;
+        }
+
+        try {
+            const response = await fetch(`/api/orders/ship/${orderId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    shippingCompany: company,
+                    trackingNumber: trackingNumber
+                })
+            });
+
+            if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+
+            const result = await response.text();
+            alert(result);
+            document.getElementById('detailShipModal').querySelector('.btn-close').click();
+            loadOrderDetails(orderId); // 刷新订单详情
+        } catch (error) {
+            console.error('发货失败:', error);
+            alert('发货失败，请重试');
+        }
+    }
+</script>
+</body>
+
+</html>

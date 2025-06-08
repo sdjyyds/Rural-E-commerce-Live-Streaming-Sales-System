@@ -1,0 +1,14 @@
+package com.sdjyyds.order.mapper;
+
+import com.sdjyyds.order.entity.Order;
+
+/**
+ * @author jds
+ * @version 1.1
+ * @since 1.0.0
+ */
+public interface OrderMapper {
+    void insert(Order order);
+    Order selectById(Long id);
+    void updateStatus(Long orderId, String status);
+}

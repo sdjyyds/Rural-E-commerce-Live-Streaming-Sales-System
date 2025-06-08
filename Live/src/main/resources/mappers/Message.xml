@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sdjyyds.live.mapper.MessageMapper">
+    <resultMap id="BaseResultMap" type="com.sdjyyds.live.entity.Message">
+        <id property="id" column="id"/>
+        <result property="streamId" column="stream_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="content" column="content"/>
+        <result property="sentTime" column="sent_time"/>
+    </resultMap>
+    <insert id="insert">
+        INSERT INTO messages (stream_id, user_id, content, sent_time)
+        VALUES (#{streamId}, #{userId}, #{content}, #{sentTime})
+    </insert>
+    <select id="findByStreamId" resultMap="BaseResultMap">
+        SELECT *
+        FROM messages
+        WHERE stream_id = #{streamId}
+    </select>
+</mapper>

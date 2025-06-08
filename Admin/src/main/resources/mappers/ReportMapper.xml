@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.ReportMapper">
+    <insert id="insert" parameterType="Report">
+        INSERT INTO reports (reporter_id, target_type, target_id, reason, description,
+        evidence_urls, status, created_at, updated_at)
+        VALUES (#{reporterId}, #{targetType}, #{targetId}, #{reason}, #{description},
+        #{evidenceUrls}, #{status}, #{createdAt}, #{updatedAt})
+    </insert>
+
+    <select id="findByStatus" resultType="Report">
+        SELECT * FROM reports WHERE status = #{status}
+    </select>
+
+    <update id="updateStatus" parameterType="Report">
+        UPDATE reports SET status = #{status}, processed_by = #{processedBy},
+        processed_at = #{processedAt}, result_remark = #{resultRemark},
+        updated_at = #{updatedAt} WHERE id = #{id}
+    </update>
+</mapper>

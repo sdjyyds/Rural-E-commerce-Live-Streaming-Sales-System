@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>乡村优品 - 地址管理</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4caf50;
+            --primary-dark: #388e3c;
+            --secondary: #ff9800;
+            --dark: #333;
+            --light: #f8f8f8;
+            --gray: #e0e0e0;
+            --danger: #f44336;
+            --success: #4caf50;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        .page-header {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .back-btn {
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+        }
+
+        .back-btn i {
+            margin-right: 5px;
+        }
+
+        .add-address-btn {
+            background-color: var(--secondary);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 4px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .add-address-btn:hover {
+            background-color: #f57c00;
+        }
+
+        .address-list {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .address-list h3 {
+            margin-bottom: 20px;
+        }
+
+        .address-item {
+            padding: 15px;
+            border: 1px solid var(--gray);
+            border-radius: 4px;
+            margin-bottom: 15px;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .address-item:hover {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .address-item.default {
+            border-color: var(--primary);
+            background-color: #f8fff8;
+        }
+
+        .default-tag {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: var(--primary);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .address-info {
+            margin-bottom: 10px;
+        }
+
+        .address-info p {
+            margin-bottom: 5px;
+        }
+
+        .address-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .address-actions button {
+            background: none;
+            border: none;
+            color: var(--primary);
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+        }
+
+        .address-actions button:hover {
+            text-decoration: underline;
+        }
+
+        .address-actions button i {
+            margin-right: 5px;
+        }
+
+        .address-actions button.delete {
+            color: var(--danger);
+        }
+
+        /* 模态框样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            width: 400px;
+            box-shadow: var(--shadow);
+            position: relative;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .close-btn:hover {
+            color: var(--dark);
+        }
+
+        .modal h3 {
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--gray);
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 4px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+            border: none;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #f57c00;
+        }
+
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #d32f2f;
+        }
+
+        .form-group-inline {
+            display: flex;
+            gap: 20px;
+        }
+
+        .form-group-inline .form-group {
+            flex: 1;
+        }
+
+        /* 浮动提示样式 */
+        .toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 12px 24px;
+            border-radius: 4px;
+            box-shadow: var(--shadow);
+            font-size: 16px;
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(-20px) translateX(-50%);
+            transition: all 0.3s ease;
+        }
+
+        .toast.success {
+            background-color: var(--success);
+            color: white;
+        }
+
+        .toast.error {
+            background-color: var(--danger);
+            color: white;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0) translateX(-50%);
+        }
+    </style>
+</head>
+<body>
+<!-- 浮动提示容器 -->
+<div id="toast" class="toast"></div>
+
+<div class="container">
+    <div class="page-header">
+        <a href="javascript:history.back()" class="back-btn">
+            <i class="fas fa-arrow-left"></i> 返回
+        </a>
+        <h1>地址管理</h1>
+        <button id="add-address-btn" class="add-address-btn">
+            <i class="fas fa-plus"></i> 新增地址
+        </button>
+    </div>
+
+    <div class="address-list">
+        <h3>我的收货地址</h3>
+        <div id="addresses-container">
+            <!-- 地址列表将通过 JavaScript 动态生成 -->
+            <div class="loading-spinner">
+                <div class="spinner"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 新增地址模态框 -->
+<div id="add-address-modal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn">&times;</span>
+        <h3>新增地址</h3>
+        <form id="add-address-form">
+            <div class="form-group">
+                <label for="recipient-name">收件人姓名</label>
+                <input type="text" class="form-control" id="recipient-name" required>
+            </div>
+            <div class="form-group">
+                <label for="phone">联系电话</label>
+                <input type="tel" class="form-control" id="phone" required>
+            </div>
+            <div class="form-group">
+                <label for="province">省份</label>
+                <input type="text" class="form-control" id="province" required>
+            </div>
+            <div class="form-group">
+                <label for="city">城市</label>
+                <input type="text" class="form-control" id="city" required>
+            </div>
+            <div class="form-group">
+                <label for="district">区域</label>
+                <input type="text" class="form-control" id="district" required>
+            </div>
+            <div class="form-group">
+                <label for="detail-address">详细地址</label>
+                <input type="text" class="form-control" id="detail-address" required>
+            </div>
+            <div class="form-group">
+                <label for="is-default">设为默认地址</label>
+                <input type="checkbox" id="is-default">
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">保存地址</button>
+                <button type="button" id="cancel-add-btn" class="btn btn-secondary">取消</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- 编辑地址模态框 -->
+<div id="edit-address-modal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn">&times;</span>
+        <h3>编辑地址</h3>
+        <form id="edit-address-form">
+            <input type="hidden" id="edit-address-id">
+            <div class="form-group">
+                <label for="edit-recipient-name">收件人姓名</label>
+                <input type="text" class="form-control" id="edit-recipient-name" required>
+            </div>
+            <div class="form-group">
+                <label for="edit-phone">联系电话</label>
+                <input type="tel" class="form-control" id="edit-phone" required>
+            </div>
+            <div class="form-group">
+                <label for="edit-province">省份</label>
+                <input type="text" class="form-control" id="edit-province" required>
+            </div>
+            <div class="form-group">
+                <label for="edit-city">城市</label>
+                <input type="text" class="form-control" id="edit-city" required>
+            </div>
+            <div class="form-group">
+                <label for="edit-district">区域</label>
+                <input type="text" class="form-control" id="edit-district" required>
+            </div>
+            <div class="form-group">
+                <label for="edit-detail-address">详细地址</label>
+                <input type="text" class="form-control" id="edit-detail-address" required>
+            </div>
+            <div class="form-group">
+                <label for="edit-is-default">设为默认地址</label>
+                <input type="checkbox" id="edit-is-default">
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">保存修改</button>
+                <button type="button" id="cancel-edit-btn" class="btn btn-secondary">取消</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="module">
+    import fetchWrapper from '../find-nacos/fetch-wrapper.js';
+    // 从 localStorage 获取 token
+    const token = localStorage.getItem('token');
+
+    // 检查是否有 token，如果没有则跳转到登录页
+    if (!token) {
+        window.location.href = 'login.html';
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // 加载地址列表
+        fetchAddresses();
+
+        // 添加地址按钮点击事件
+        document.getElementById('add-address-btn').addEventListener('click', function () {
+            document.getElementById('add-address-modal').classList.add('show');
+        });
+
+        // 关闭模态框按钮
+        document.getElementById('cancel-add-btn').addEventListener('click', function () {
+            document.getElementById('add-address-modal').classList.remove('show');
+        });
+
+        document.getElementById('cancel-edit-btn').addEventListener('click', function () {
+            document.getElementById('edit-address-modal').classList.remove('show');
+        });
+
+        // 点击模态框外部关闭模态框
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', function (e) {
+                if (e.target === modal) {
+                    modal.classList.remove('show');
+                }
+            });
+        });
+
+        // 关闭按钮点击事件
+        document.querySelectorAll('.close-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+                document.querySelector('.modal.show').classList.remove('show');
+            });
+        });
+
+        // 新增地址表单提交
+        document.getElementById('add-address-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            addAddress();
+        });
+
+        // 编辑地址表单提交
+        document.getElementById('edit-address-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            updateAddress();
+        });
+    });
+
+    // 显示浮动提示
+    function showToast(message, type) {
+        const toast = document.getElementById('toast');
+        toast.textContent = message;
+        toast.className = `toast ${type}`;
+        setTimeout(() => {
+            toast.classList.add('show');
+        }, 10);
+        setTimeout(() => {
+            toast.classList.remove('show');
+        }, 3000);
+    }
+
+    // 获取地址列表
+    function fetchAddresses() {
+        const addressesContainer = document.getElementById('addresses-container');
+        addressesContainer.innerHTML = '<div class="loading-spinner"><div class="spinner"></div></div>';
+
+        fetchWrapper.fetch('http://user-service/api/addresses', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        })
+            .then(response => {
+                if (!response.ok) {
+                    showToast('获取地址失败，请稍后重试', 'error');
+                    throw new Error('获取地址列表失败');
+                }
+                return response.json();
+            })
+            .then(result => {
+                if (result.code === 200) {
+                    console.log("地址数据：", result.data);
+                    showToast('获取地址成功', 'success');
+                    renderAddresses(result.data); // 直接使用字符串类型的 id
+                } else {
+                    throw new Error(result.message || '获取地址列表失败');
+                }
+            })
+            .catch(error => {
+                console.error('获取地址列表出错:', error);
+                addressesContainer.innerHTML = `<div class="error-message">${error.message}</div>`;
+                showToast('获取地址失败，请稍后重试', 'error');
+            });
+    }
+
+    // 渲染地址列表
+    function renderAddresses(addresses) {
+        const addressesContainer = document.getElementById('addresses-container');
+
+        if (addresses.length === 0) {
+            addressesContainer.innerHTML = `
+            <div class="empty-address">
+                <p>您还没有收货地址</p>
+                <button id="add-first-address-btn" class="btn btn-secondary">添加第一个地址</button>
+            </div>
+        `;
+            document.getElementById('add-first-address-btn').addEventListener('click', function () {
+                document.getElementById('add-address-modal').classList.add('show');
+            });
+            return;
+        }
+
+        let html = '';
+        addresses.forEach(address => {
+            const isDefault = address.isDefault ? 'default' : '';
+            const defaultTag = address.isDefault ? '<span class="default-tag">默认地址</span>' : '';
+
+            // 使用引号包裹 id，确保作为字符串传递
+            html += `
+            <div class="address-item ${isDefault}" data-id="${address.id}">
+                ${defaultTag}
+                <div class="address-info">
+                    <p><strong>收件人:</strong> ${address.recipientName}</p>
+                    <p><strong>联系电话:</strong> ${address.phone}</p>
+                    <p><strong>地址:</strong> ${address.province} ${address.city} ${address.district} ${address.detailAddress}</p>
+                </div>
+                <div class="address-actions">
+                    <button class="edit-btn" onclick="editAddress('${address.id}')">
+                        <i class="fas fa-edit"></i> 编辑
+                    </button>
+                    <button class="delete-btn" onclick="deleteAddress('${address.id}')">
+                        <i class="fas fa-trash"></i> 删除
+                    </button>
+                    ${!address.isDefault ? `
+                        <button class="set-default-btn" onclick="setDefaultAddress('${address.id}')">
+                            <i class="fas fa-check-circle"></i> 设为默认
+                        </button>
+                    ` : ''}
+                </div>
+            </div>
+        `;
+        });
+
+        addressesContainer.innerHTML = html;
+    }
+
+    // 添加新地址
+    function addAddress() {
+        const formData = {
+            recipientName: document.getElementById('recipient-name').value,
+            phone: document.getElementById('phone').value,
+            province: document.getElementById('province').value,
+            city: document.getElementById('city').value,
+            district: document.getElementById('district').value,
+            detailAddress: document.getElementById('detail-address').value,
+            isDefault: document.getElementById('is-default').checked
+        };
+
+        fetchWrapper.fetch('http://user-service/api/addresses', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(formData)
+        })
+            .then(response => {
+                if (!response.ok) {
+                    showToast('添加地址失败', 'error');
+                    throw new Error('添加地址失败');
+                }
+                return response.json();
+            })
+            .then(result => {
+                if (result.code === 200) {
+                    showToast('地址添加成功', 'success');
+                    document.getElementById('add-address-modal').classList.remove('show');
+                    document.getElementById('add-address-form').reset();
+                    fetchAddresses();
+                } else {
+                    throw new Error(result.message || '添加地址失败');
+                }
+            })
+            .catch(error => {
+                console.error('添加地址出错:', error);
+                showToast('添加地址失败: ' + error.message, 'error');
+            });
+    }
+
+    // 编辑地址
+    window.editAddress = function (id) {
+        // id 已经是字符串，无需转换
+        fetchWrapper.fetch(`http://user-service/api/addresses/${id}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('获取地址详情失败');
+                }
+                return response.json();
+            })
+            .then(result => {
+                if (result.code === 200) {
+                    const address = result.data;
+                    document.getElementById('edit-address-id').value = address.id; // 直接使用字符串
+                    document.getElementById('edit-recipient-name').value = address.recipientName;
+                    document.getElementById('edit-phone').value = address.phone;
+                    document.getElementById('edit-province').value = address.province;
+                    document.getElementById('edit-city').value = address.city;
+                    document.getElementById('edit-district').value = address.district;
+                    document.getElementById('edit-detail-address').value = address.detailAddress;
+                    document.getElementById('edit-is-default').checked = address.isDefault;
+                    document.getElementById('edit-address-modal').classList.add('show');
+                    showToast('获取地址详情成功','success')
+                } else {
+                    throw new Error(result.message || '获取地址详情失败');
+                }
+            })
+            .catch(error => {
+                console.error('获取地址详情出错:', error);
+                showToast('获取地址详情失败: ' + error.message, 'error');
+            });
+    };
+
+    // 更新地址
+    function updateAddress() {
+        const id = document.getElementById('edit-address-id').value;
+        const formData = {
+            recipientName: document.getElementById('edit-recipient-name').value,
+            phone: document.getElementById('edit-phone').value,
+            province: document.getElementById('edit-province').value,
+            city: document.getElementById('edit-city').value,
+            district: document.getElementById('edit-district').value,
+            detailAddress: document.getElementById('edit-detail-address').value,
+            isDefault: document.getElementById('edit-is-default').checked
+        };
+
+        // id 已经是字符串，直接使用
+        fetchWrapper.fetch(`http://user-service/api/addresses/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(formData)
+        })
+            .then(response => {
+                if (!response.ok) {
+                    showToast('更新地址失败','error');
+                    throw new Error('更新地址失败');
+                }
+                return response.json();
+            })
+            .then(result => {
+                if (result.code === 200) {
+                    showToast('地址更新成功', 'success');
+                    document.getElementById('edit-address-modal').classList.remove('show');
+                    fetchAddresses();
+                } else {
+                    throw new Error(result.message || '更新地址失败');
+                }
+            })
+            .catch(error => {
+                console.error('更新地址出错:', error);
+                showToast('更新地址失败: ' + error.message, 'error');
+            });
+    }
+
+    // 删除地址
+    window.deleteAddress = function (id) {
+        if (confirm('确定要删除这个地址吗？')) {
+            // id 已经是字符串，直接使用
+            fetchWrapper.fetch(`http://user-service/api/addresses/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        showToast('删除地址失败','error');
+                        throw new Error('删除地址失败');
+                    }
+                    return response.json();
+                })
+                .then(result => {
+                    if (result.code === 200) {
+                        showToast('地址删除成功', 'success');
+                        fetchAddresses();
+                    } else {
+                        throw new Error(result.message || '删除地址失败');
+                    }
+                })
+                .catch(error => {
+                    console.error('删除地址出错:', error);
+                    showToast('删除地址失败: ' + error.message, 'error');
+                });
+        }
+    };
+
+    // 设置默认地址
+    window.setDefaultAddress = function (id) {
+        // id 已经是字符串，直接使用
+        fetchWrapper.fetch(`http://user-service/api/addresses/${id}/default`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        })
+            .then(response => {
+                if (!response.ok) {
+                    showToast('设置默认地址失败',  'error');
+                    throw new Error('设置默认地址失败');
+                }
+                return response.json();
+            })
+            .then(result => {
+                if (result.code === 200) {
+                    showToast('已设置为默认地址', 'success');
+                    fetchAddresses();
+                } else {
+                    showToast(result.message || '设置默认地址失败', 'error');
+                    throw new Error(result.message || '设置默认地址失败');
+                }
+            })
+            .catch(error => {
+                console.error('设置默认地址出错:', error);
+                showToast('设置默认地址失败: ' + error.message, 'error');
+            });
+    };
+</script>
+</body>
+</html>

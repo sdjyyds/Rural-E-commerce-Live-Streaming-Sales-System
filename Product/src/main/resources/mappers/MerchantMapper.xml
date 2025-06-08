@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sdjyyds.product.dao.MerchantDao">
+    <resultMap id="BaseResultMap" type="com.sdjyyds.product.entity.Merchant">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="user_id" property="userId" jdbcType="BIGINT"/>
+        <result column="business_name" property="businessName" jdbcType="VARCHAR"/>
+        <result column="business_license" property="businessLicense" jdbcType="VARCHAR"/>
+        <result column="business_license_image" property="businessLicenseImage" jdbcType="VARCHAR"/>
+        <result column="store_image" property="storeImage" jdbcType="VARCHAR"/>
+        <result column="contact_person" property="contactPerson" jdbcType="VARCHAR"/>
+        <result column="contact_phone" property="contactPhone" jdbcType="VARCHAR"/>
+        <result column="email" property="email" jdbcType="VARCHAR"/>
+        <result column="address" property="address" jdbcType="LONGVARCHAR"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+        <result column="reviewed_at" property="reviewedAt" jdbcType="TIMESTAMP"/>
+        <result column="reviewed_by" property="reviewedBy" jdbcType="BIGINT"/>
+        <result column="created_at" property="createdAt" jdbcType="TIMESTAMP"/>
+        <result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, user_id, business_name, business_license, business_license_image,
+        store_image, contact_person, contact_phone, email, address, status,
+        reviewed_at, reviewed_by, created_at, updated_at
+    </sql>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from merchants
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from merchants
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+
+    <insert id="insert" parameterType="com.sdjyyds.product.entity.Merchant">
+        insert into merchants (id, user_id, business_name,
+                               business_license, business_license_image, store_image,
+                               contact_person, contact_phone, email, address, status,
+                               reviewed_at, reviewed_by, created_at, updated_at)
+        values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{businessName,jdbcType=VARCHAR},
+                #{businessLicense,jdbcType=VARCHAR}, #{businessLicenseImage,jdbcType=VARCHAR}, #{storeImage,jdbcType=VARCHAR},
+                #{contactPerson,jdbcType=VARCHAR}, #{contactPhone,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR},
+                #{address,jdbcType=LONGVARCHAR}, #{status,jdbcType=VARCHAR}, #{reviewedAt,jdbcType=TIMESTAMP},
+                #{reviewedBy,jdbcType=BIGINT}, #{createdAt,jdbcType=TIMESTAMP}, #{updatedAt,jdbcType=TIMESTAMP})
+    </insert>
+
+    <insert id="insertSelective" parameterType="com.sdjyyds.product.entity.Merchant">
+        insert into merchants
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            id,
+            <if test="userId != null">user_id,</if>
+            <if test="businessName != null">business_name,</if>
+            <if test="businessLicense != null">business_license,</if>
+            <if test="businessLicenseImage != null">business_license_image,</if>
+            <if test="storeImage != null">store_image,</if>
+            <if test="contactPerson != null">contact_person,</if>
+            <if test="contactPhone != null">contact_phone,</if>
+            <if test="email != null">email,</if>
+            <if test="address != null">address,</if>
+            <if test="status != null">status,</if>
+            <if test="reviewedAt != null">reviewed_at,</if>
+            <if test="reviewedBy != null">reviewed_by,</if>
+            <if test="createdAt != null">created_at,</if>
+            <if test="updatedAt != null">updated_at,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            #{id,jdbcType=BIGINT},
+            <if test="userId != null">#{userId,jdbcType=BIGINT},</if>
+            <if test="businessName != null">#{businessName,jdbcType=VARCHAR},</if>
+            <if test="businessLicense != null">#{businessLicense,jdbcType=VARCHAR},</if>
+            <if test="businessLicenseImage != null">#{businessLicenseImage,jdbcType=VARCHAR},</if>
+            <if test="storeImage != null">#{storeImage,jdbcType=VARCHAR},</if>
+            <if test="contactPerson != null">#{contactPerson,jdbcType=VARCHAR},</if>
+            <if test="contactPhone != null">#{contactPhone,jdbcType=VARCHAR},</if>
+            <if test="email != null">#{email,jdbcType=VARCHAR},</if>
+            <if test="address != null">#{address,jdbcType=LONGVARCHAR},</if>
+            <if test="status != null">#{status,jdbcType=VARCHAR},</if>
+            <if test="reviewedAt != null">#{reviewedAt,jdbcType=TIMESTAMP},</if>
+            <if test="reviewedBy != null">#{reviewedBy,jdbcType=BIGINT},</if>
+            <if test="createdAt != null">#{createdAt,jdbcType=TIMESTAMP},</if>
+            <if test="updatedAt != null">#{updatedAt,jdbcType=TIMESTAMP},</if>
+        </trim>
+    </insert>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from merchants
+    </select>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.sdjyyds.product.entity.Merchant">
+        update merchants
+        <set>
+            <if test="userId != null">user_id = #{userId,jdbcType=BIGINT},</if>
+            <if test="businessName != null">business_name = #{businessName,jdbcType=VARCHAR},</if>
+            <if test="businessLicense != null">business_license = #{businessLicense,jdbcType=VARCHAR},</if>
+            <if test="businessLicenseImage != null">business_license_image = #{businessLicenseImage,jdbcType=VARCHAR},</if>
+            <if test="storeImage != null">store_image = #{storeImage,jdbcType=VARCHAR},</if>
+            <if test="contactPerson != null">contact_person = #{contactPerson,jdbcType=VARCHAR},</if>
+            <if test="contactPhone != null">contact_phone = #{contactPhone,jdbcType=VARCHAR},</if>
+            <if test="email != null">email = #{email,jdbcType=VARCHAR},</if>
+            <if test="address != null">address = #{address,jdbcType=LONGVARCHAR},</if>
+            <if test="status != null">status = #{status,jdbcType=VARCHAR},</if>
+            <if test="reviewedAt != null">reviewed_at = #{reviewedAt,jdbcType=TIMESTAMP},</if>
+            <if test="reviewedBy != null">reviewed_by = #{reviewedBy,jdbcType=BIGINT},</if>
+            <if test="createdAt != null">created_at = #{createdAt,jdbcType=TIMESTAMP},</if>
+            <if test="updatedAt != null">updated_at = #{updatedAt,jdbcType=TIMESTAMP},</if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateByPrimaryKey" parameterType="com.sdjyyds.product.entity.Merchant">
+        update merchants
+        set user_id = #{userId,jdbcType=BIGINT},
+            business_name = #{businessName,jdbcType=VARCHAR},
+            business_license = #{businessLicense,jdbcType=VARCHAR},
+            business_license_image = #{businessLicenseImage,jdbcType=VARCHAR},
+            store_image = #{storeImage,jdbcType=VARCHAR},
+            contact_person = #{contactPerson,jdbcType=VARCHAR},
+            contact_phone = #{contactPhone,jdbcType=VARCHAR},
+            email = #{email,jdbcType=VARCHAR},
+            address = #{address,jdbcType=LONGVARCHAR},
+            status = #{status,jdbcType=VARCHAR},
+            reviewed_at = #{reviewedAt,jdbcType=TIMESTAMP},
+            reviewed_by = #{reviewedBy,jdbcType=BIGINT},
+            created_at = #{createdAt,jdbcType=TIMESTAMP},
+            updated_at = #{updatedAt,jdbcType=TIMESTAMP}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+</mapper>

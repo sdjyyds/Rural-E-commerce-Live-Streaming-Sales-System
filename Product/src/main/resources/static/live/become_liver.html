@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>乡村优品 - 成为主播</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* 引入 start.html 中的样式 */
+        :root {
+            --primary: #4caf50;
+            --primary-dark: #388e3c;
+            --secondary: #ff9800;
+            --dark: #333;
+            --light: #f8f8f8;
+            --gray: #e0e0e0;
+            --danger: #f44336;
+            --success: #4caf50;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        .become-anchor-container {
+            max-width: 600px;
+            margin: 100px auto;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            padding: 30px;
+        }
+
+        .become-anchor-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--gray);
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 4px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+            border: none;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-block {
+            display: block;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="become-anchor-container">
+            <h2>成为主播</h2>
+            <form>
+                <div class="form-group">
+                    <label for="real-name">真实姓名</label>
+                    <input type="text" class="form-control" id="real-name" placeholder="请输入真实姓名">
+                </div>
+                <div class="form-group">
+                    <label for="id-number">身份证号码</label>
+                    <input type="text" class="form-control" id="id-number" placeholder="请输入身份证号码">
+                </div>
+                <div class="form-group">
+                    <label for="phone">联系电话</label>
+                    <input type="text" class="form-control" id="phone" placeholder="请输入联系电话">
+                </div>
+                <div class="form-group">
+                    <label for="introduction">个人简介</label>
+                    <textarea class="form-control" id="introduction" rows="5" placeholder="请输入个人简介"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">提交申请</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

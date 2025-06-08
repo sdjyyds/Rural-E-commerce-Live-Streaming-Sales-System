@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>乡村优品 - 订单详情</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4caf50;
+            --danger: #f44336;
+            --dark: #333;
+            --light: #f8f8f8;
+            --gray: #e0e0e0;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .order-detail-header {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+        }
+
+        .order-summary {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .order-id {
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .order-status {
+            font-size: 14px;
+            padding: 4px 10px;
+            border-radius: 4px;
+        }
+
+        .order-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .order-info div {
+            display: flex;
+            gap: 8px;
+        }
+
+        .order-info i {
+            color: var(--primary);
+            font-size: 16px;
+        }
+
+        .order-products {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+        }
+
+        .product-item {
+            display: grid;
+            grid-template-columns: 80px 1fr auto;
+            gap: 15px;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--gray);
+        }
+
+        .product-img {
+            width: 80px;
+            height: 80px;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .product-details {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .product-name {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .product-meta {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .product-price {
+            font-size: 14px;
+            font-weight: bold;
+            color: var(--dark);
+        }
+
+        .order-total {
+            text-align: right;
+            padding: 20px;
+            font-size: 16px;
+        }
+
+        .total-amount {
+            font-weight: bold;
+            color: var(--danger);
+            font-size: 20px;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            padding: 20px;
+        }
+
+        .action-btn {
+            padding: 8px 18px;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .action-btn.refund {
+            background-color: var(--danger);
+            color: white;
+        }
+
+        .action-btn.pay {
+            background-color: var(--primary);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="order-detail-header">
+            <div class="order-summary">
+                <div class="order-id">订单号：ORD20231201001</div>
+                <div class="order-status paid">已付款</div>
+            </div>
+
+            <div class="order-info">
+                <div><i class="fas fa-user"></i> 用户：张三</div>
+                <div><i class="fas fa-clock"></i> 下单时间：2023-12-01 14:30</div>
+                <div><i class="fas fa-map-marker-alt"></i> 地址：XX省XX市XX区</div>
+            </div>
+        </div>
+
+        <div class="order-products">
+            <h3>购买商品</h3>
+            <div class="product-item">
+                <div class="product-img">
+                    <img src="https://via.placeholder.com/80x80?text=苹果" alt="商品图片">
+                </div>
+                <div class="product-details">
+                    <div class="product-name">陕西洛川苹果 5斤装</div>
+                    <div class="product-meta">数量：2件 | 单价：¥28.8</div>
+                </div>
+                <div class="product-price">¥57.60</div>
+            </div>
+
+            <div class="product-item">
+                <div class="product-img">
+                    <img src="https://via.placeholder.com/80x80?text=鸡蛋" alt="商品图片">
+                </div>
+                <div class="product-details">
+                    <div class="product-name">农家散养土鸡蛋 30枚</div>
+                    <div class="product-meta">数量：1件 | 单价：¥39.9</div>
+                </div>
+                <div class="product-price">¥39.90</div>
+            </div>
+        </div>
+
+        <div class="order-total">
+            <div>订单总额：<span class="total-amount">¥97.50</span></div>
+        </div>
+
+        <div class="action-buttons">
+            <button class="action-btn refund" onclick="openRefundModal()">申请退款</button>
+            <button class="action-btn pay" disabled>去付款</button>
+        </div>
+    </div>
+
+    <script>
+	</script>
+</body>
+</html>

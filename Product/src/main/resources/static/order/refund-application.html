@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>乡村优品 - 退款申请</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4caf50;
+            --danger: #f44336;
+            --dark: #333;
+            --light: #f8f8f8;
+            --gray: #e0e0e0;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .page-title {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .refund-form {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            padding: 30px;
+        }
+
+        .refund-summary {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--gray);
+        }
+
+        .summary-item {
+            display: flex;
+            margin-bottom: 10px;
+        }
+
+        .summary-label {
+            width: 120px;
+            color: #666;
+        }
+
+        .summary-value {
+            font-weight: 500;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--gray);
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .refund-reason {
+            height: 120px;
+            resize: vertical;
+        }
+
+        .refund-amount {
+            color: var(--danger);
+            font-weight: bold;
+        }
+
+        .submit-button {
+            background-color: var(--primary);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .submit-button:hover {
+            background-color: var(--primary-dark);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 class="page-title">退款申请</h2>
+
+        <form class="refund-form" id="refundForm">
+            <div class="refund-summary">
+                <div class="summary-item">
+                    <div class="summary-label">订单编号：</div>
+                    <div class="summary-value">ORD20231201001</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-label">申请退款金额：</div>
+                    <div class="summary-value refund-amount">¥97.50</div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="refundReason">退款原因</label>
+                <select class="form-control" id="refundReason">
+                    <option value="">请选择退款原因</option>
+                    <option value="quality">商品质量问题</option>
+                    <option value="wrong">收到商品与描述不符</option>
+                    <option value="notwant">不想要了</option>
+                    <option value="other">其他原因</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="refundDescription">详细说明</label>
+                <textarea class="form-control refund-reason" id="refundDescription" placeholder="请详细描述退款原因..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="refundContact">联系电话</label>
+                <input type="tel" class="form-control" id="refundContact" placeholder="请输入联系电话">
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="submit-button">提交退款申请</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // 退款表单提交
+        document.getElementById('refundForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // 获取表单数据
+            const refundReason = document.getElementById('refundReason').value;
+            const refundDescription = document.getElementById('refundDescription').value;
+            const refundContact = document.getElementById('refundContact').value;
+            
+            // 简单验证
+            if (!refundReason || !refundDescription || !refundContact) {
+                alert('请填写完整的退款信息');
+                return;
+            }
+            
+            // 准备提交的数据
+            const refundData = {
+                order_id: 123456, // 实际应从URL或全局变量获取
+                user_id: 12345,   // 实际应从会话获取
+                refund_no: generateRefundNo(),
+                reason: refundDescription,
+                amount: 97.50,    // 实际应从订单数据获取
+                status: 'pending',
+                applied_at: new Date().toISOString()
+            };
+            
+            // 模拟API请求
+            console.log('提交退款申请:', refundData);
+            
+            // 显示成功消息
+            alert('退款申请已提交，我们将尽快处理！');
+            
+            // 跳转到订单列表页
+            window.location.href = 'order-list.html';
+        });
+        
+        // 生成退款单号
+        function generateRefundNo() {
+            const date = new Date();
+            return `REF${date.getFullYear()}${(date.getMonth()+1).toString().padStart(2, '0')}${date.getDate().toString().padStart(2, '0')}${Math.floor(Math.random()*1000000).toString().padStart(6, '0')}`;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>乡村优品 - 退款处理</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4caf50;
+            --danger: #f44336;
+            --dark: #333;
+            --light: #f8f8f8;
+            --gray: #e0e0e0;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .page-title {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .refund-details {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+
+        .detail-section {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--gray);
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+
+        .detail-item {
+            display: flex;
+            margin-bottom: 10px;
+        }
+
+        .detail-label {
+            width: 120px;
+            color: #666;
+        }
+
+        .refund-reason {
+            white-space: pre-line;
+        }
+
+        .product-info {
+            display: grid;
+            grid-template-columns: 80px 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .product-img {
+            width: 80px;
+            height: 80px;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .product-name {
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .process-form {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            padding: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--gray);
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .refund-result {
+            display: flex;
+            gap: 20px;
+        }
+
+        .refund-result input {
+            margin-right: 5px;
+        }
+
+        .reject-reason {
+            height: 100px;
+            resize: vertical;
+            display: none;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        .action-btn {
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            border: none;
+        }
+
+        .action-btn.confirm {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .action-btn.cancel {
+            background-color: var(--gray);
+            color: var(--dark);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 class="page-title">退款处理</h2>
+
+        <div class="refund-details">
+            <div class="detail-section">
+                <h3 class="section-title">退款申请信息</h3>
+                <div class="detail-item">
+                    <div class="detail-label">退款单号：</div>
+                    <div>REF20231201001</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">订单号：</div>
+                    <div>ORD20231201001</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">申请时间：</div>
+                    <div>2023-12-01 15:30</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">申请人：</div>
+                    <div>张三</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">联系电话：</div>
+                    <div>138****1234</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">退款金额：</div>
+                    <div class="refund-amount">¥97.50</div>
+                </div>
+            </div>
+
+            <div class="detail-section">
+                <h3 class="section-title">退款原因</h3>
+                <div class="refund-reason">
+                    苹果收到后发现有部分腐烂，希望退款。
+                </div>
+            </div>
+
+            <div class="detail-section">
+                <h3 class="section-title">商品信息</h3>
+                <div class="product-info">
+                    <div class="product-img">
+                        <img src="https://via.placeholder.com/80x80?text=苹果" alt="商品图片">
+                    </div>
+                    <div>
+                        <div class="product-name">陕西洛川苹果 5斤装</div>
+                        <div>数量：2件 | 单价：¥28.8</div>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <div class="product-img">
+                        <img src="https://via.placeholder.com/80x80?text=鸡蛋" alt="商品图片">
+                    </div>
+                    <div>
+                        <div class="product-name">农家散养土鸡蛋 30枚</div>
+                        <div>数量：1件 | 单价：¥39.9</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <form class="process-form" id="processForm">
+            <div class="form-group">
+                <label class="form-label">处理结果</label>
+                <div class="refund-result">
+                    <label>
+                        <input type="radio" name="result" value="approved" checked>
+                        同意退款
+                    </label>
+                    <label>
+                        <input type="radio" name="result" value="rejected">
+                        拒绝退款
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="rejectReason">拒绝原因</label>
+                <textarea class="form-control reject-reason" id="rejectReason" placeholder="请填写拒绝原因..."></textarea>
+            </div>
+
+            <div class="action-buttons">
+                <button type="button" class="action-btn cancel">取消</button>
+                <button type="submit" class="action-btn confirm">确认处理</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // 显示/隐藏拒绝原因输入框
+        const resultRadios = document.querySelectorAll('input[name="result"]');
+        const rejectReason = document.getElementById('rejectReason');
+        
+        resultRadios.forEach(radio => {
+            radio.addEventListener('change', function() {
+                if (this.value === 'rejected') {
+                    rejectReason.style.display = 'block';
+                } else {
+                    rejectReason.style.display = 'none';
+                }
+            });
+        });
+        
+        // 处理表单提交
+        document.getElementById('processForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const result = document.querySelector('input[name="result"]:checked').value;
+            const rejectReason = document.getElementById('rejectReason').value;
+            
+            // 验证拒绝原因
+            if (result === 'rejected' && !rejectReason.trim()) {
+                alert('请填写拒绝原因');
+                return;
+            }
+            
+            // 准备提交的数据
+            const processData = {
+                refund_id: 987654, // 实际应从URL或全局变量获取
+                status: result === 'approved' ? 'approved' : 'rejected',
+                processed_by: 99999, // 实际应从会话获取
+                processed_at: new Date().toISOString(),
+                reject_reason: result === 'rejected' ? rejectReason : null
+            };
+            
+            // 模拟API请求
+            console.log('处理退款申请:', processData);
+            
+            // 显示成功消息
+            alert('退款申请已处理！');
+            
+            // 跳转到退款管理页
+            window.location.href = 'refund-management.html';
+        });
+    </script>
+</body>
+</html>

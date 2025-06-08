@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>乡村优品 - 注册</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* 保持与登录界面一致的样式 */
+        :root {
+            --primary: #4caf50;
+            --primary-dark: #388e3c;
+            --secondary: #ff9800;
+            --dark: #333;
+            --light: #f8f8f8;
+            --gray: #e0e0e0;
+            --danger: #f44336;
+            --success: #4caf50;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        .register-container {
+            max-width: 400px;
+            margin: 50px auto;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            padding: 30px;
+        }
+
+        .register-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--gray);
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .form-group-inline {
+            display: flex;
+            gap: 10px;
+        }
+
+        .form-group-inline .form-control {
+            flex: 1;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 4px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+            border: none;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-code {
+            background-color: var(--gray);
+            color: var(--dark);
+            min-width: 100px;
+        }
+
+        .btn-code:hover {
+            background-color: #d0d0d0;
+        }
+
+        .btn-block {
+            display: block;
+            width: 100%;
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .login-link a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            color: var(--danger);
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            border-radius: 4px;
+            padding: 10px 15px;
+            margin-bottom: 15px;
+            display: none;
+            animation: fadeIn 0.3s;
+        }
+
+        .form-group .error-message {
+            margin-top: 5px;
+            font-size: 14px;
+            padding: 5px 10px;
+            margin-bottom: 0;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="register-container">
+        <div id="error-message" class="error-message" style="display: none;"></div>
+        <h2>注册</h2>
+        <form id="register-form">
+            <div class="form-group">
+                <label for="username">用户名</label>
+                <input type="text" class="form-control" id="username" placeholder="请输入5-20位用户名">
+                <small class="error-message" id="username-error"></small>
+            </div>
+            <div class="form-group">
+                <label for="phone">手机号</label>
+                <div class="form-group-inline">
+                    <input type="tel" class="form-control" id="phone" placeholder="请输入11位手机号">
+                    <button type="button" id="get-code-btn" class="btn btn-code">获取验证码</button>
+                </div>
+                <small class="error-message" id="phone-error"></small>
+            </div>
+            <div class="form-group">
+                <label for="verify-code">验证码</label>
+                <input type="text" class="form-control" id="verify-code" placeholder="请输入6位验证码">
+                <small class="error-message" id="code-error"></small>
+            </div>
+            <div class="form-group">
+                <label for="password">密码</label>
+                <input type="password" class="form-control" id="password" placeholder="请输入6-20位密码">
+                <small class="error-message" id="password-error"></small>
+            </div>
+            <div class="form-group">
+                <label for="confirm-password">确认密码</label>
+                <input type="password" class="form-control" id="confirm-password" placeholder="请再次输入密码">
+                <small class="error-message" id="confirm-password-error"></small>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">注册</button>
+        </form>
+        <div class="login-link">
+            <p>已有账号？<a href="login.html">立即登录</a></p>
+        </div>
+    </div>
+</div>
+
+<script type="module">
+    import fetchWrapper from '../find-nacos/fetch-wrapper.js';
+
+    const errorContainer = document.getElementById('error-message');
+
+    function clearError(elementId = null) {
+        if (elementId) {
+            const element = document.getElementById(elementId);
+            element.textContent = '';
+            element.style.display = 'none';
+        } else {
+            errorContainer.textContent = '';
+            errorContainer.style.display = 'none';
+            document.querySelectorAll('.form-group .error-message').forEach(el => {
+                el.textContent = '';
+                el.style.display = 'none';
+            });
+        }
+    }
+
+    function showError(message, elementId = null) {
+        if (elementId) {
+            const element = document.getElementById(elementId);
+            element.textContent = message;
+            element.style.display = 'block';
+        } else {
+            errorContainer.textContent = message;
+            errorContainer.style.display = 'block';
+        }
+    }
+
+    // 用户名验证
+    function validateUsername() {
+        const username = document.getElementById('username').value.trim();
+        clearError('username-error');
+
+        if (!username) {
+            showError('用户名不能为空', 'username-error');
+            return false;
+        }
+        if (username.length < 5 || username.length > 20) {
+            showError('用户名长度5-20位', 'username-error');
+            return false;
+        }
+        return true;
+    }
+
+    // 手机号验证
+    function validatePhone() {
+        const phone = document.getElementById('phone').value.trim();
+        clearError('phone-error');
+
+        if (!phone) {
+            showError('手机号不能为空', 'phone-error');
+            return false;
+        }
+        if (!/^1[3-9]\d{9}$/.test(phone)) {
+            showError('手机号格式不正确', 'phone-error');
+            return false;
+        }
+        return true;
+    }
+
+    // 验证码验证
+    function validateCode() {
+        const code = document.getElementById('verify-code').value.trim();
+        clearError('code-error');
+
+        if (!code) {
+            showError('验证码不能为空', 'code-error');
+            return false;
+        }
+        if (code.length !== 6 || !/^\d+$/.test(code)) {
+            showError('请输入6位数字验证码', 'code-error');
+            return false;
+        }
+        return true;
+    }
+
+    // 密码验证
+    function validatePassword() {
+        const password = document.getElementById('password').value.trim();
+        clearError('password-error');
+
+        if (!password) {
+            showError('密码不能为空', 'password-error');
+            return false;
+        }
+        if (password.length < 6 || password.length > 20) {
+            showError('密码长度6-20位', 'password-error');
+            return false;
+        }
+        return true;
+    }
+
+    // 确认密码验证
+    function validateConfirmPassword() {
+        const password = document.getElementById('password').value.trim();
+        const confirmPassword = document.getElementById('confirm-password').value.trim();
+        clearError('confirm-password-error');
+
+        if (!confirmPassword) {
+            showError('请确认密码', 'confirm-password-error');
+            return false;
+        }
+        if (password !== confirmPassword) {
+            showError('两次输入的密码不一致', 'confirm-password-error');
+            return false;
+        }
+        return true;
+    }
+
+    // 为输入框添加blur事件监听器
+    document.getElementById('username').addEventListener('blur', validateUsername);
+    document.getElementById('phone').addEventListener('blur', validatePhone);
+    document.getElementById('verify-code').addEventListener('blur', validateCode);
+    document.getElementById('password').addEventListener('blur', validatePassword);
+    document.getElementById('confirm-password').addEventListener('blur', function () {
+        // 如果密码已经验证过，才验证确认密码
+        if (document.getElementById('password').value.trim()) {
+            validateConfirmPassword();
+        }
+    });
+
+    // 当密码输入框变化时，重新验证确认密码
+    document.getElementById('password').addEventListener('input', function () {
+        // 如果确认密码已经填写，重新验证
+        if (document.getElementById('confirm-password').value.trim()) {
+            validateConfirmPassword();
+        }
+    });
+
+    // 倒计时函数
+    function startCountdown() {
+        const btn = document.getElementById('get-code-btn');
+        let countdown = 60;
+        btn.disabled = true;
+
+        const timer = setInterval(() => {
+            btn.textContent = `${countdown}秒后重新获取`;
+            countdown--;
+
+            if (countdown < 0) {
+                clearInterval(timer);
+                btn.textContent = '获取验证码';
+                btn.disabled = false;
+            }
+        }, 1000);
+    }
+    // 注册表单提交
+    document.getElementById('register-form').addEventListener('submit', async function (e) {
+        e.preventDefault();
+        clearError();
+
+        // 前端验证（保持不变）
+        const isUsernameValid = validateUsername();
+        const isPhoneValid = validatePhone();
+        const isCodeValid = validateCode();
+        const isPasswordValid = validatePassword();
+        const isConfirmPasswordValid = validateConfirmPassword();
+
+        if (!isUsernameValid || !isPhoneValid || !isCodeValid || !isPasswordValid || !isConfirmPasswordValid) {
+            return;
+        }
+
+        const username = document.getElementById('username').value.trim();
+        const phone = document.getElementById('phone').value.trim();
+        const code = document.getElementById('verify-code').value.trim();
+        const password = document.getElementById('password').value.trim();
+
+        try {
+            const response = await fetchWrapper.fetch('http://user-service/api/users/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    username,
+                    password,
+                    phone,
+                    code
+                })
+            });
+
+            // **关键修改：统一处理注册响应**
+            const result = await response.json(); // 解析统一响应结构
+
+            if (!response.ok) {
+                // 处理注册失败（如用户名/手机号重复）
+                showError(result.message || '注册失败');
+                return;
+            }
+
+            if (result.code === 200) {
+                console.log('注册成功');
+                window.location.href = 'login.html';
+            } else {
+                showError(result.message || '注册失败，请检查信息');
+            }
+        } catch (error) {
+            console.error('注册出错:', error);
+            showError('注册过程中发生错误，请稍后再试');
+        }
+    });
+</script>
+</body>
+</html>

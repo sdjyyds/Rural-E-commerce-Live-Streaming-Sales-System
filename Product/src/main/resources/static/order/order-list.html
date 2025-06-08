@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>乡村优品 - 我的订单</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4caf50;
+            --primary-dark: #388e3c;
+            --danger: #f44336;
+            --dark: #333;
+            --light: #f8f8f8;
+            --gray: #e0e0e0;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .page-title {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .order-filter {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 15px;
+        }
+
+        .status-filter select {
+            padding: 8px 15px;
+            border: 1px solid var(--gray);
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .order-list {
+            display: grid;
+            gap: 20px;
+        }
+
+        .order-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            padding: 20px;
+            transition: transform 0.3s;
+        }
+
+        .order-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .order-id {
+            font-size: 16px;
+            color: var(--dark);
+        }
+
+        .order-status {
+            font-weight: 500;
+            padding: 3px 8px;
+            border-radius: 4px;
+        }
+
+        .order-status.pending { background-color: #fff5cc; color: #ff9800; }
+        .order-status.paid { background-color: #e8f5e9; color: #4caf50; }
+        .order-status.shipped { background-color: #bbdefb; color: #2196f3; }
+        .order-status.completed { background-color: #e0f2f1; color: #009688; }
+        .order-status.cancelled { background-color: #ffebee; color: #f44336; }
+        .order-status.refunded { background-color: #fce4ec; color: #e91e63; }
+
+        .order-items {
+            display: grid;
+            grid-template-columns: 60px 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .order-item-img {
+            width: 60px;
+            height: 60px;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .order-item-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .item-name {
+            font-size: 14px;
+            font-weight: 500;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            overflow: hidden;
+        }
+
+        .item-meta {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .order-total {
+            text-align: right;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid var(--gray);
+        }
+
+        .total-amount {
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--dark);
+        }
+
+        .order-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .action-btn {
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .action-btn.view { background-color: var(--primary); color: white; }
+        .action-btn.refund { background-color: var(--danger); color: white; }
+        .action-btn.disabled { opacity: 0.6; cursor: not-allowed; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 class="page-title">我的订单</h2>
+
+        <!-- 订单筛选栏 -->
+        <div class="order-filter">
+            <div class="filter-group">
+                <label>筛选状态：</label>
+                <select class="status-filter">
+                    <option value="all">全部状态</option>
+                    <option value="pending">待付款</option>
+                    <option value="paid">已付款</option>
+                    <option value="shipped">已发货</option>
+                    <option value="completed">已完成</option>
+                    <option value="cancelled">已取消</option>
+                    <option value="refunded">已退款</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <button class="action-btn view">刷新订单</button>
+            </div>
+        </div>
+
+        <!-- 订单列表 -->
+        <div class="order-list">
+            <!-- 循环生成订单卡片 -->
+            <div class="order-card" data-order-id="123456">
+                <div class="order-header">
+                    <div class="order-id">订单号：ORD20231201001</div>
+                    <div class="order-status pending">待付款</div>
+                </div>
+
+                <div class="order-items">
+                    <!-- 订单商品项 -->
+                    <div class="order-item-img">
+                        <img src="https://via.placeholder.com/60x60?text=苹果" alt="商品图片">
+                    </div>
+                    <div class="order-item-info">
+                        <div class="item-name">陕西洛川苹果 5斤装</div>
+                        <div class="item-meta">×2  ¥28.8/斤</div>
+                    </div>
+
+                    <div class="order-item-img">
+                        <img src="https://via.placeholder.com/60x60?text=鸡蛋" alt="商品图片">
+                    </div>
+                    <div class="order-item-info">
+                        <div class="item-name">农家散养土鸡蛋 30枚</div>
+                        <div class="item-meta">×1  ¥39.9/份</div>
+                    </div>
+                </div>
+
+                <div class="order-total">
+                    <div>实付金额：<span class="total-amount">¥97.50</span></div>
+                </div>
+
+                <div class="order-actions">
+                    <button class="action-btn view" onclick="viewOrderDetails(123456)">查看详情</button>
+                    <button class="action-btn refund" disabled>申请退款</button>
+                </div>
+            </div>
+
+            <div class="order-card" data-order-id="123457">
+                <div class="order-header">
+                    <div class="order-id">订单号：ORD20231202002</div>
+                    <div class="order-status paid">已付款</div>
+                </div>
+
+                <div class="order-items">
+                    <div class="order-item-img">
+                        <img src="https://via.placeholder.com/60x60?text=青菜" alt="商品图片">
+                    </div>
+                    <div class="order-item-info">
+                        <div class="item-name">有机小青菜 500g</div>
+                        <div class="item-meta">×3  ¥9.9/份</div>
+                    </div>
+                </div>
+
+                <div class="order-total">
+                    <div>实付金额：<span class="total-amount">¥29.70</span></div>
+                </div>
+
+                <div class="order-actions">
+                    <button class="action-btn view" onclick="viewOrderDetails(123457)">查看详情</button>
+                    <button class="action-btn refund">申请退款</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 查看订单详情（模拟跳转）
+        function viewOrderDetails(orderId) {
+            window.location.href = `order-detail.html?orderId=${orderId}`;
+        }
+    </script>
+</body>
+</html>

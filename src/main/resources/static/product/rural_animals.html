@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>乡村优品 - 新鲜家禽</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* 引入 start.html 中的样式 */
+        :root {
+            --primary: #4caf50;
+            --primary-dark: #388e3c;
+            --secondary: #ff9800;
+            --dark: #333;
+            --light: #f8f8f8;
+            --gray: #e0e0e0;
+            --danger: #f44336;
+            --success: #4caf50;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        .main-content {
+            display: flex;
+            margin: 20px 0;
+            gap: 20px;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            padding: 20px;
+            height: fit-content;
+        }
+
+        .sidebar h3 {
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--gray);
+        }
+
+        .category-list {
+            list-style: none;
+        }
+
+        .category-list li {
+            margin-bottom: 10px;
+        }
+
+        .category-list a {
+            color: var(--dark);
+            text-decoration: none;
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+        }
+
+        .category-list a:hover {
+            color: var(--primary);
+        }
+
+        .content {
+            flex: 1;
+        }
+
+        .section-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .section-title h2 {
+            font-size: 22px;
+            color: var(--dark);
+        }
+
+        .section-title a {
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s;
+            position: relative;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-img {
+            height: 400px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .card-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .card:hover .card-img img {
+            transform: scale(1.05);
+        }
+
+        .favorite-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            z-index: 10;
+        }
+
+        .favorite-btn:hover {
+            background-color: white;
+        }
+
+        .favorite-btn.active i {
+            color: var(--danger);
+        }
+
+        .card-content {
+            padding: 15px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .card-merchant {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .card-merchant img {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .card-price {
+            color: var(--danger);
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .card-original-price {
+            color: #888;
+            font-size: 14px;
+            text-decoration: line-through;
+            margin-bottom: 10px;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            color: #888;
+            font-size: 14px;
+            padding-top: 10px;
+            border-top: 1px solid var(--gray);
+        }
+
+        .card-tags {
+            margin-bottom: 10px;
+        }
+
+        .tag {
+            display: inline-block;
+            background-color: var(--primary);
+            color: white;
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-right: 5px;
+        }
+
+        .buy-btn, .add-to-cart-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .buy-btn:hover, .add-to-cart-btn:hover {
+            background-color: var(--primary-dark);
+        }
+        /* 浮动提示样式 */
+        .toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 12px 24px;
+            border-radius: 4px;
+            box-shadow: var(--shadow);
+            font-size: 16px;
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(-20px) translateX(-50%);
+            transition: all 0.3s ease;
+        }
+
+        .toast.success {
+            background-color: var(--success);
+            color: white;
+        }
+
+        .toast.error {
+            background-color: var(--danger);
+            color: white;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0) translateX(-50%);
+        }
+    </style>
+</head>
+<body>
+<!-- 浮动提示容器 -->
+<div id="toast" class="toast"></div>
+<div class="container">
+    <div class="main-content">
+        <!-- 侧边栏分类（修改为家禽分类） -->
+        <aside class="sidebar">
+            <h3>家禽分类</h3>
+            <ul class="category-list" id="category-list">
+                <li><a href="#"><span class="name">土鸡</span> <span class="count">0</span></a></li>
+                <li><a href="#"><span class="name">土鸭</span> <span class="count">0</span></a></li>
+                <li><a href="#"><span class="name">土鹅</span> <span class="count">0</span></a></li>
+                <li><a href="#"><span class="name">鸽子</span> <span class="count">0</span></a></li>
+                <li><a href="#"><span class="name">鹌鹑</span> <span class="count">0</span></a></li>
+            </ul>
+        </aside>
+        <!-- 主内容区 -->
+        <main class="content">
+            <div class="section-title">
+                <h2><i class="fas fa-dove" style="margin-right: 10px;"></i> 新鲜家禽</h2>
+            </div>
+            <div id="product-list"></div>
+        </main>
+    </div>
+</div>
+
+<script type="module">
+    import fetchWrapper from '../find-nacos/fetch-wrapper.js';
+
+    const token = localStorage.getItem('token');
+
+    // 显示浮动提示
+    function showToast(message, type) {
+        const toast = document.getElementById('toast');
+        toast.textContent = message;
+        toast.className = `toast ${type}`;
+        setTimeout(() => {
+            toast.classList.add('show');
+        }, 10);
+        setTimeout(() => {
+            toast.classList.remove('show');
+        }, 3000);
+    }
+
+    // 收藏/取消收藏功能
+    async function toggleFavorite(productId, buttonElement) {
+        const isFavorited = buttonElement.classList.contains('active');
+        const url = isFavorited
+            ? `http://localhost:10010/favorites/remove?productId=${productId}`
+            : `http://localhost:10010/favorites/add?productId=${productId}`;
+        const method = isFavorited ? 'DELETE' : 'POST';
+
+        try {
+            const response = await fetch(url, {
+                method,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                credentials: 'include'
+            });
+
+            if (!response.ok) {
+                showToast(isFavorited ? '取消收藏失败' : '收藏失败', 'error');
+                return;
+            }
+
+            buttonElement.classList.toggle('active');
+            showToast(isFavorited ? '已取消收藏' : '已收藏', 'success');
+        } catch (error) {
+            console.error('收藏操作失败:', error);
+            showToast('收藏操作失败', 'error');
+        }
+    }
+
+
+    // 购买功能
+    async function buyProduct(productVO, quantity) {
+        try {
+            const orderDetailDTO = {
+                totalPrice: productVO.originalPrice * quantity, // 订单总金额
+                paymentAmount: productVO.price * quantity, // 实付金额（如有优惠请修改）
+                quantity: quantity, // 默认购买数量为 1（可根据实际情况调整）
+                unitPrice: productVO.originalPrice, // 商品原价
+                actualPrice: productVO.price, // 实际支付价格（如有优惠需修改）
+                productName: productVO.name, // 商品名称
+                productId: productVO.id, // 商品ID
+                productImage: productVO.imageUrls, // 商品主图
+                stock: productVO.stock,
+                sales: productVO.sales
+            };
+
+            const orderResponse = await fetch('http://localhost:10100/orders/create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                credentials: 'include', // 添加这行
+                body: JSON.stringify(orderDetailDTO)
+            });
+
+            if (!orderResponse.ok) {
+                let errorMessage = '创建订单失败';
+                if (orderResponse.status === 400) {
+                    errorMessage = '用户没有默认地址';
+                } else if (orderResponse.status === 500)
+                    errorMessage = '服务器内部错误';
+                console.error('HTTP 错误:', orderResponse.status, errorMessage);
+                showToast(errorMessage, 'error');
+                throw new Error(errorMessage);
+            }
+            const orderId = await orderResponse.json();
+
+            console.log('订单创建成功，订单ID:', orderId);
+            showToast('购买成功', 'success');
+
+            // 更新本地库存与销量数据
+            productVO.stock -= quantity;
+            productVO.sales += quantity;
+
+            // 找到对应的商品卡片并更新显示
+            const card = document.querySelector(`[data-product-id="${product.id}"]`).closest('.card');
+            if (card) {
+                const spans = card.querySelectorAll('.card-footer span');
+                spans[0].textContent = `已售 ${productVO.sales}`;
+                spans[1].textContent = `库存 ${productVO.stock}`;
+
+                // 同时更新购买数量输入框最大值
+                const input = card.querySelector('input[type="number"]');
+                if (input) input.max = productVO.stock;
+            }
+        } catch (error) {
+            console.error(error.message, error);
+            showToast(error.message, 'error');
+        }
+    }
+
+
+    // 加入购物车功能
+    async function addToCart(productVO) {
+        try {
+            const response = await fetchWrapper.fetch('http://product-service/cart/add', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'app家禽on/json'
+                },
+                body: JSON.stringify({userId: userId, productId: productVO.id})
+            });
+            if (!response.ok) {
+                showToast('加入购物车失败', 'error');
+                throw new Error('加入购物车失败');
+            }
+            console.log('商品已加入购物车');
+        } catch (error) {
+            showToast('加入购物车失败', 'error');
+            console.error('加入购物车失败:', error);
+        }
+    }
+
+    // 调用接口获取家禽列表
+    async function getFruits() {
+        try {
+            const response = await fetch('http://localhost:10010/products/list?keyword=家禽',{
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include', // 添加这行
+            });
+            const data = await response.json();
+            const productList = document.getElementById('product-list');
+            data.forEach(productVO => {
+                const card = document.createElement('div');
+                card.classList.add('card');
+
+                const cardImg = document.createElement('div');
+                cardImg.classList.add('card-img');
+                const img = document.createElement('img');
+                img.src = productVO.imageUrls; // 假设接口返回图片URL
+                cardImg.appendChild(img);
+                // 出现收藏信息（红心/空心）
+                const favoriteBtn = document.createElement('div');
+                favoriteBtn.classList.add('favorite-btn');
+                favoriteBtn.setAttribute('data-product-id', productVO.id);
+
+                // 根据 productVO.befavorited 设置红心或空心样式
+                const heartIcon = document.createElement('i');
+                heartIcon.classList.add('fas', 'fa-heart');
+                if (productVO.befavorited) {
+                    favoriteBtn.classList.add('active'); // 红心样式
+                }
+                favoriteBtn.appendChild(heartIcon);
+                cardImg.appendChild(favoriteBtn);
+
+                favoriteBtn.addEventListener('click', () => {
+                    toggleFavorite(productVO.id, favoriteBtn);
+                });
+
+
+                const cardContent = document.createElement('div');
+                cardContent.classList.add('card-content');
+
+                const cardTitle = document.createElement('h3');
+                cardTitle.classList.add('card-title');
+                cardTitle.textContent = productVO.name;
+                cardContent.appendChild(cardTitle);
+
+                const cardMerchant = document.createElement('div');
+                cardMerchant.classList.add('card-merchant');
+                const merchantImg = document.createElement('img');
+                merchantImg.src = productVO.mainImageUrl; // 假设接口返回商家logo URL
+                cardMerchant.appendChild(merchantImg);
+                const merchantName = document.createElement('span');
+                merchantName.textContent = productVO.merchantName;
+                cardMerchant.appendChild(merchantName);
+                cardContent.appendChild(cardMerchant);
+
+                const cardPrice = document.createElement('p');
+                cardPrice.classList.add('card-price');
+                cardPrice.textContent = `￥${productVO.price}`;
+                cardContent.appendChild(cardPrice);
+
+                if (productVO.originalPrice) {
+                    const cardOriginalPrice = document.createElement('p');
+                    cardOriginalPrice.classList.add('card-original-price');
+                    cardOriginalPrice.textContent = `￥${productVO.originalPrice}`;
+                    cardContent.appendChild(cardOriginalPrice);
+                }
+
+                if (productVO.tags && productVO.tags.length > 0) {
+                    const cardTags = document.createElement('div');
+                    cardTags.classList.add('card-tags');
+                    productVO.tags.forEach(tag => {
+                        const tagElement = document.createElement('span');
+                        tagElement.classList.add('tag');
+                        tagElement.textContent = tag;
+                        cardTags.appendChild(tagElement);
+                    });
+                    cardContent.appendChild(cardTags);
+                }
+
+
+                const cardFooter = document.createElement('div');
+                cardFooter.classList.add('card-footer');
+
+                const soldCount = document.createElement('span');
+                soldCount.textContent = `已售 ${productVO.sales}`;
+                cardFooter.appendChild(soldCount);
+                const stock = document.createElement('span');
+                stock.textContent = `库存 ${productVO.stock}`;
+                cardFooter.appendChild(stock);
+                //输入购买数量
+                const quantityInput = document.createElement('input');
+                quantityInput.type = 'number';
+                quantityInput.min = 1;
+                quantityInput.max = productVO.stock;
+                quantityInput.value = 1;
+                quantityInput.style.width = '60px';
+                quantityInput.style.marginRight = '10px';
+                cardFooter.appendChild(quantityInput);
+
+                const buyBtn = document.createElement('button');
+                buyBtn.classList.add('buy-btn');
+                buyBtn.textContent = '购买';
+                buyBtn.addEventListener('click', () => {
+                    const quantity = parseInt(quantityInput.value, 10);
+                    if (isNaN(quantity) || quantity < 1) {
+                        showToast('请输入有效数量', 'error');
+                        return;
+                    }
+                    if (quantity > productVO.stock) {
+                        showToast('超过库存数量', 'error');
+                        return;
+                    }
+                    buyProduct(productVO, quantity);
+                });
+                cardFooter.appendChild(buyBtn);
+
+                const addToCartBtn = document.createElement('button');
+                addToCartBtn.classList.add('add-to-cart-btn');
+                addToCartBtn.textContent = '加入购物车';
+                addToCartBtn.addEventListener('click', () => addToCart(productVO));
+                cardFooter.appendChild(addToCartBtn);
+
+                cardContent.appendChild(cardFooter);
+
+                card.appendChild(cardImg);
+                card.appendChild(cardContent);
+                productList.appendChild(card);
+            });
+        } catch (error) {
+            showToast('获取家禽列表失败');
+            console.error('获取家禽列表失败:', error);
+        }
+    }
+
+    window.addEventListener('DOMContentLoaded', function () {
+        const categoryElements = document.querySelectorAll('#category-list .name');
+        const keywords = Array.from(categoryElements).map(el => el.textContent);
+
+        const params = new URLSearchParams();
+        keywords.forEach(k => params.append('keywords', k));
+
+        fetchWrapper.fetch('http://product-service/products/descriptionKeywordCounts?' + params.toString())
+            .then(response => response.json())
+            .then(data => {
+                document.querySelectorAll('#category-list li').forEach(li => {
+                    const name = li.querySelector('.name').textContent;
+                    const count = data[name] || 0;
+                    li.querySelector('.count').textContent = count;
+                });
+            })
+            .catch(err => console.error('加载失败:', err));
+    });
+    getFruits();
+</script>
+</body>
+</html>

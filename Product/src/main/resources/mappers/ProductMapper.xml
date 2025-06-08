@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sdjyyds.product.dao.ProductDao">
+    <resultMap id="BaseResultMap" type="com.sdjyyds.product.entity.Product">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="merchant_id" property="merchantId" jdbcType="BIGINT"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="category" property="category" jdbcType="VARCHAR"/>
+        <result column="description" property="description" jdbcType="VARCHAR"/>
+        <result column="price" property="price" jdbcType="DECIMAL"/>
+        <result column="original_price" property="originalPrice" jdbcType="DECIMAL"/>
+        <result column="stock" property="stock" jdbcType="INTEGER"/>
+        <result column="sales" property="sales" jdbcType="INTEGER"/>
+        <result column="main_image_url" property="mainImageUrl" jdbcType="VARCHAR"/>
+        <result column="image_urls" property="imageUrls" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+        <result column="created_at" property="createdAt" jdbcType="TIMESTAMP"/>
+        <result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <select id="insert">
+        INSERT INTO products (id, merchant_id, name, category, description, price, original_price, stock, sales,
+                              main_image_url, image_urls, status, created_at, updated_at)
+        VALUES (#{id}, #{merchantId}, #{name}, #{category}, #{description}, #{price}, #{originalPrice}, #{stock},
+                #{sales},
+                #{mainImageUrl}, #{imageUrls}, #{status}, NOW(), NOW())
+
+    </select>
+    <update id="update">
+        UPDATE products
+        SET   <if test="name != null">name = #{name},</if>
+        <if test="category != null">category = #{category},</if>
+        <if test="description != null">description = #{description},</if>
+        <if test="price != null">price = #{price},</if>
+        <if test="originalPrice != null">original_price = #{originalPrice},</if>
+        <if test="stock != null">stock = #{stock},</if>
+        <if test="sales != null">sales = #{sales},</if>
+        <if test="mainImageUrl != null">main_image_url = #{mainImageUrl},</if>
+        <if test="imageUrls != null">image_urls = #{imageUrls},</if>
+        <if test="status != null">status = #{status},</if>
+        updated_at = now()
+        WHERE id = #{id}
+    </update>
+    <update id="delete">
+        DELETE
+        FROM products
+        WHERE id = #{id}
+    </update>
+    <select id="search" resultMap="BaseResultMap">
+        SELECT *
+        FROM products
+        WHERE `category` = #{keyword}
+    </select>
+    <select id="getProductCountByKeywordsInDescription" resultType="map">
+        <foreach collection="keywords" item="keyword" separator="UNION ALL">
+            SELECT
+            #{keyword} AS keyword,
+            COUNT(*) AS count
+            FROM products
+            WHERE description LIKE CONCAT('%', #{keyword}, '%')
+        </foreach>
+    </select>
+
+
+    <select id="findByIds" resultMap="BaseResultMap">
+        SELECT * FROM products WHERE id IN
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+</mapper>
